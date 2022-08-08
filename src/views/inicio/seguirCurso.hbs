@@ -1,104 +1,144 @@
 {{> navbar nombre = sesion.nombre idRol = sesion.cveRol cveUsuario = sesion.cveUsuario }}
 <p name="cveusuario" id="{{sesion.cveUsuario}}" hidden>{{sesion.cveUsuario}}</p>
 
-<div id="mySidenav" class="sidenav">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-    <div class="itemsSecciones">
-        {{#each dataCurso}}
-        {{cveCurso}}
-        <button class="accordion">{{nombre}}</button>
-        <div class="panel2" id="panel">
+<section style="padding-left:500px;">
 
-            <ul style="padding: 0 0 0 0;">
-                {{#each ../tema}}
-                {{#ifeq ../cveSeccion secid}}
-                {{#ifeq estate 1}}
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <div class="itemsSecciones">
+            {{#each dataCurso}}
+            {{cveCurso}}
+            <button class="accordion">{{nombre}}</button>
+            <div class="panel2" id="panel">
 
-                {{#ifeq2num cveTem ../../idTema}}
+                <ul style="padding: 0 0 0 0;">
+                    {{#each ../tema}}
+                    {{#ifeq ../cveSeccion secid}}
+                    {{#ifeq estate 1}}
 
-                <a href="/inicio/seguirCurso/{{cveCurso}}/{{cveTem}}">
-                    <li
-                        style=" padding-left: 5px; background-color : lightgreen; padding-top: 10px; padding-bottom: 10px;">
-                        <input type="checkbox" name="terminado" id='{{cveTem}}' checked>
+                    {{#ifeq2num cveTem ../../idTema}}
 
-                        {{else}}
-                        <a href="/inicio/seguirCurso/{{cveCurso}}/{{cveTem}}">
-                    <li style=" padding-left: 5px; padding-top: 10px; padding-bottom: 10px;"><input type="checkbox"
-                            name="terminado" id='{{cveTem}}' checked>
-                        {{/ifeq2num}}
+                    <a href="/inicio/seguirCurso/{{cveCurso}}/{{cveTem}}">
+                        <li
+                            style=" padding-left: 5px; background-color : lightgreen; padding-top: 10px; padding-bottom: 10px;">
+                            <input type="checkbox" name="terminado" id='{{cveTem}}' checked>
+
+                            {{else}}
+                            <a href="/inicio/seguirCurso/{{cveCurso}}/{{cveTem}}">
+                        <li style=" padding-left: 5px; padding-top: 10px; padding-bottom: 10px;"><input type="checkbox"
+                                name="terminado" id='{{cveTem}}' checked>
+                            {{/ifeq2num}}
 
 
-                        {{else}}
-                        {{#ifeq2num cveTem ../../idTema}}
-                        <a href="/inicio/seguirCurso/{{cveCurso}}/{{cveTem}}">
-                    <li style="  padding-left: 5px; color: lightgreen; padding-top: 10px; padding-bottom: 10px;"><input
-                            type="checkbox" name="terminado" id='{{cveTem}}'>
+                            {{else}}
+                            {{#ifeq2num cveTem ../../idTema}}
+                            <a href="/inicio/seguirCurso/{{cveCurso}}/{{cveTem}}">
+                        <li style="  padding-left: 5px; color: lightgreen; padding-top: 10px; padding-bottom: 10px;">
+                            <input type="checkbox" name="terminado" id='{{cveTem}}'>
 
-                        {{else}}
-                        <a href="/inicio/seguirCurso/{{cveCurso}}/{{cveTem}}">
-                    <li style="  padding-left: 5px; padding-top: 10px; padding-bottom: 10px;"><input type="checkbox"
-                            name="terminado" id='{{cveTem}}'>
-                        {{/ifeq2num}}
-                        {{/ifeq}}
-                        {{name}} </li>
-                </a>
-                <hr style="margin-top: 0 !important; margin-bottom: 0 !important;">
-                {{/ifeq}}
-                {{/each}}
-            </ul>
+                            {{else}}
+                            <a href="/inicio/seguirCurso/{{cveCurso}}/{{cveTem}}">
+                        <li style="  padding-left: 5px; padding-top: 10px; padding-bottom: 10px;"><input type="checkbox"
+                                name="terminado" id='{{cveTem}}'>
+                            {{/ifeq2num}}
+                            {{/ifeq}}
+                            {{name}} </li>
+                    </a>
+                    <hr style="margin-top: 0 !important; margin-bottom: 0 !important;">
+                    {{/ifeq}}
+                    {{/each}}
+                </ul>
+            </div>
+            {{/each}}
+
         </div>
-        {{/each}}
 
     </div>
+</section>
 
+
+<div style="padding: 50px;">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/inicio/">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="/inicio/aprendiendo/">Aprendiendo</a></li>
+            {{#each temaActual}}
+            <li class="breadcrumb-item">{{nombreCurso}}</li>
+            <li class="breadcrumb-item">{{nombreSeccion}}</li>
+            <li class="breadcrumb-item">{{nombreTema}}</li>
+            {{/each}}
+            {{#ifeq bandera.bandera 'fin'}}
+            <li class="breadcrumb-item">Curso terminado</li>
+            {{/ifeq}}
+        </ol>
+    </nav>
 </div>
+
 <a onclick="openNav()" class="btn-flotante">
     < </a>
+
         <main id="contenido">
             <p name="cursoid" id="{{cursoid}}" hidden>{{cursoid}}</p>
 
             {{#ifeq bandera.bandera 'fin'}}
-           
-            <div>
-                <h1 class="centrar"> {{felicidades.nombre}}</h1>
+            <div style="padding: 50px;">
+                <h3>Curso terminado</h3>
+                <br>
+                <div class="alert alert-success centrar" role="alert">
+                    <h5>{{felicidades.nombre}}</h5>
+                </div>
             </div>
             <p name="idtema" id="term" hidden>term</p>
+
             {{else}}
-            
+
+
             {{#each temaActual}}
-            
-            <div>
 
-            </div>
-            <div>
-
+            <div style="padding:50px;">
+                <p name="cursoid" id="{{cursoid}}" hidden>{{cursoid}}</p>
                 <p name="idtema" id="{{cvetema}}" hidden>{{cvetema}}</p>
 
+                <h3 class="centrar" style="color: gray;">Tema</h3>
+                <h5 style="text-align: center ;">{{nombreMayus}}</h5>
 
-                <h2 class="centrar">Tema: </h2>
-                <h3 style="text-align: center ;">{{nombre}}</h3>
+                <h6 style="color: gray;">Descripción</h6>
+                <div style="padding:10px; border: solid 1px gray; border-radius: 15px; background:whitesmoke">
+                    {{#if descripcion}}
+                    <p style="padding-left: 20px; padding-right: 20px;" class="parrafo">{{descripcion}}</p>
+                    {{else}}
+                    <p>Sin información.</p>
+                    {{/if}}
+                </div>
+                <br>
+                <hr class="line">
             </div>
-            <div>
-                <p name="cursoid" id="{{cursoid}}" hidden>{{cursoid}}</p>
-                <h2 class="centrar">Descripción:</h2>
-                <p style="margin-left: 50px; margin-right: 50px;">{{descripcion}}</p>
 
+            <div style="padding-left: 50px; padding-right: 50px; padding-bottom: 50px;">
+                <h3 class="centrar" style="color: gray;">Teoría</h3>
+                {{#if teoria}}
+                <div align="center">
+                    <div style="width:1200px; padding:20px 20px 50px 50px; border: solid 1px gray; border-radius: 15px; background:whitesmoke">
+                        <p class="parrafo">{{teoria}}</p>
+                    </div>
+                </div>
+                {{else}}
+                <div class="alert alert-warning" role="alert">
+                    El tema actual no tiene teoría
+                </div>
+                {{/if}}
+                <hr class="line">
             </div>
-            <div>
-                <h2 class="centrar">Teoría</h2>
-                <hr class="line ">
-                <p>{{tema}}</p>
-            </div>
-            <div>
 
-                <h2 class="centrar">Material</h2>
+            <div>
+                <h3 class="centrar" style="color: gray;">Material</h3>
                 <div style="padding-left: 33%; padding-right: 30% ;">
                     {{#if ../materiales}}
-                    <ul style=" list-group border: 1px solid black;">
+                    <ul class="list-group">
 
                         {{#each ../materiales}}
-                        <li class="list-group-item listItem"><a href="/static/{{rutaMaterial}}"
-                                download="{{nombreMaterial}}">{{nombreMaterial}}</a></li>
+                        <li class="list-group-item"><a href="/static/uploads/img/{{rutaMaterial}}"
+                                download="{{rutaMaterial}}">{{nombreMaterial}}</a></li>
                         {{/each}}
 
                     </ul>
@@ -106,26 +146,21 @@
                     <div class="alert alert-danger" role="alert">
                         Este tema no tiene materiales
                     </div>
-
                     {{/if}}
                 </div>
-
-
             </div>
-
+            <hr class="line ">
             {{/each}}
 
-
-            <div>
-                <h2 class="centrar">Comentarios</h2>
-                <hr class="line ">
+            <div style="padding:50px;">
+                <h3 class="centrar" style="color: gray;">Comentarios</h3>
                 <div class="centrar" name="comments">
 
                 </div>
                 <div>
                     <hr class="line">
 
-                    <button class="buttonest" onclick="comentar()">Dejar un comentario</button>
+                    <button class="btn btn-primary buttonest" onclick="comentar()">Dejar un comentario</button>
 
                 </div>
             </div>
@@ -138,21 +173,22 @@
             <!-- Modal content -->
             <div class="modal-content">
                 <span class="close">&times;</span>
-                <label class="centrar">Comentar</label>
+                <h4>Comentar</h4>
                 <div>
-
-
-                    <input class="modalComentario" name="Comentario" type="text" placeholder="Deja tu comentario">
+                    <textarea class="modalComentario form-control" name="Comentario" type="text"
+                        placeholder="Deja tu comentario"></textarea>
                 </div>
+
                 <div class="btnsModal">
-                    <button class="btnCerrarModal buttonwarn">Cancelar</button>
-                    <button class="btnComentar buttonaccep btnCerrarModal2" name="comentar">Comentar</button>
+                    <button class="btn btn-danger btnCerrarModal buttonwarn">Cancelar</button>
+                    <button class="btn btn-success btnComentar buttonaccep btnCerrarModal2"
+                        name="comentar">Comentar</button>
 
                 </div>
             </div>
 
         </div>
-         {{> footer }}
+        {{> footer }}
         <script src="/static/js/funciones.js"></script>
         <script>
 
@@ -304,7 +340,4 @@
 
         </script>
 
-
         <script src="/static/js/jquery-3.6.0.js"></script>
-
-       

@@ -1,11 +1,21 @@
-
 {{> navbar nombre = sesion.nombre idRol = sesion.cveRol cveUsuario = sesion.cveUsuario }}
 
-    <main class="mainContent" >
-        <form class="form card border-primary mb-3" action="../curso/upload" method="post" enctype="multipart/form-data" style="width:800px;">
-            <h1 class="centrar">Crear curso</h1>
-            <div>
-                
+<div style="padding:50px;">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/inicio/">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="/inicio/misCursos">Mis Cursos</a></li>
+            <li class="breadcrumb-item">Crear curso</li>
+        </ol>
+    </nav>
+</div>
+
+<main class="mainContent">
+    <form class="form card border-primary mb-3" action="../curso/upload" method="post" enctype="multipart/form-data"
+        style="width:800px;">
+        <h1 class="centrar">Crear curso</h1>
+        <div>
+
             <div class="formCrearCurso card-body text-primary">
                 <div class="form-group">
                     <label for="name">Nombre curso</label>
@@ -13,46 +23,48 @@
                 </div>
                 <div class="form-group">
                     <label for="image">Imagen curso</label>
-                    <input class="form-control black" type="file" accept="image/png,image/jpeg,image/gif,image/ico,image/icoa,image/jpg" id="imagen" name="imagen" >
+                    <input class="form-control black" type="file"
+                        accept="image/png,image/jpeg,image/gif,image/ico,image/icoa,image/jpg" id="imagen"
+                        name="imagen">
                 </div>
                 <div class="form-group">
                     <label for="descripcion">Descripción</label>
-                    <textarea class="form-control black-2" id="descripcion" name="descripcion" cols="20" rows="6" required></textarea>
+                    <textarea class="form-control black-2" id="descripcion" name="descripcion" cols="20" rows="6"
+                        required></textarea>
                 </div>
             </div>
 
-            </div>            
-            <div class="btnsCrearCurso">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <a class="btn btn-danger btn-block" type="button" name="btnCancelar" id="btnCancelar" href="/inicio/misCursos">Cancelar</a>
-                        </div>
-                        <div class="col-md-6">
-                            <input class="btn btn-primary btn-block" type="submit" name="btnCrearCurso" id="btnCrearCurso" value="Crear">
-                        </div>
+        </div>
+        <div class="btnsCrearCurso">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <a class="btn btn-danger btn-block" type="button" name="btnCancelar" id="btnCancelar"
+                            href="/inicio/misCursos">Cancelar</a>
                     </div>
-                </div> 
+                    <div class="col-md-6">
+                        <input class="btn btn-primary btn-block" type="submit" name="btnCrearCurso" id="btnCrearCurso"
+                            value="Crear">
+                    </div>
+                </div>
             </div>
-        </form>
-    </main>
+        </div>
+    </form>
+</main>
 
-    {{> footer }}
-    
-     {{> scripts}}
+{{> footer }}
 
-    {{#if alert }}
-        <script>
-            Swal.fire({
-                title: "Curso creado exitosamente!",
-                icon:"success",
-                type: "success",
-                showConfirmButton: true
-            }).then(function() {
-                window.location = "/inicio/misCursos";
-            });
-        </script>
-    {{/if}}
+{{> scripts}}
 
-
-    
+{{#if alert }}
+<script>
+    Swal.fire({
+        title: "Curso creado exitosamente!",
+        icon: "success",
+        type: "success",
+        showConfirmButton: true
+    }).then(function () {
+        window.location = "/inicio/misCursos";
+    });
+</script>
+{{/if}}

@@ -1,78 +1,131 @@
 {{> navbar nombre = sesion.nombre idRol = sesion.cveRol cveUsuario = sesion.cveUsuario }}
+
+<div style="padding: 50px;">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/inicio/">Inicio</a></li>
+          <li class="breadcrumb-item">Curso</li>
+           {{#each curso}}
+          <li class="breadcrumb-item">{{nombreCurso}}</li>
+          {{/each}}
+      </ol>
+  </nav>
+</div>
+
 <main class="contenedor sombra">
-    <div class="descripcion">
-      {{#each curso}}
-        <div class="">
-          
-            <img class="imgCurso" src="/static/uploads/img/{{ruta}}" alt="">
+  <div class="descripcion">
+
+    {{#each curso}}
+    <div align="center">
+      {{#if ruta}}
+      <br>
+      <img src="/static/uploads/img/{{ruta}}" style="width:400px; height:auto;">
+      {{else}}
+      <img src="/static/img/logo.png" style="width:400px; height:auto;">
+      {{/if}}
+    </div>
+
+    <hr class="separacion">
+
+    <div>
+      <br>
+      <h1>{{nombreCurso}}</h1>
+      <br>
+      {{#if descripcion}}
+      <p class="parrafo">{{descripcion}}</p>
+      {{else}}
+      <p>Sin información.</p>
+      {{/if}}
+      <br><br>
+      <hr>
+      <div class="gridDatosCurso">
+        <br>
+        <p class="card-text" style="float: left;">
+          <i class="icon-calendar"></i>&nbsp;{{fecha}}
+        </p>
+        <p class="card-text" style="float: right;">
+          <i class="icon-user"></i>&nbsp;{{instructor}}
+        </p>
+
+
+        {{#if ../boton}}
+          {{#if ../alumno}}
+          <div>
+            <form action="/inicio/asignarCurso" method="post" type="submit">
+              <input type="text" name="cveCurso" value="{{cveCurso}}" hidden>
+              <input type="text" name="cveUsuario" value="{{../idUsuario}}" hidden>
+              <button class="btn btn-success">Agregar a mis cursos</button>
+            </form>
+          </div>
+          {{/if}}
+        {{/if}}
+
+      </div>
+
+    </div>
+
+    {{/each}}
+  </div>
+
+  <hr>
+  <div style="padding-top:50px; padding-bottom:50px; padding-left: 150px; padding-right: 150px;">
+    <h3 class="centrar">Contenido</h3>
+  {{#if secciones}}
+  <div class="seccionesCurso" style="padding-left: 150px; padding-right: 150px;">
+    <div id="accordion">
+      {{#each secciones}}
+      <div class="card">
+        <div class="card-header" id="headingOne">
+          <h5 class="mb-0">
+            <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{cveSeccion}}"
+              aria-expanded="true" aria-controls="collapseOne">
+              Sección: {{nombre}}
+            </button>
+          </h5>
         </div>
-        <hr class="separacion">
-        <div>  
-            <h2>{{curnom}}</h2>
-            <p class="parrafo">{{descripcion}}</p>
-            <div class="gridDatosCurso">
-                <div>
-                    {{fecha}}
-                </div>
-                <div>
-                    {{instructor}}
-                </div>
-                {{#if ../boton}}
-                <div>
-                  <form action="/inicio/asignarCurso" method="post" type="submit">
-                    <input type="text" name="cveCurso" value="{{cveCurso}}" hidden>
-                    <input type="text" name="cveUsuario" value="{{../idUsuario}}" hidden>
-                    <button class="btn btn-success">Agregar a mis cursos</button>
-                  </form>
-                </div>
-                {{/if}}
-            </div>
+        <div id="collapse{{cveSeccion}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+          <div class="card-body">
+            <ol>
+            {{#each ../temas}}
+            {{#ifeq ../cveSeccion secTem}}
+            <li >Tema: {{nam}}</li>
+            {{/ifeq}}
+            {{/each}}
+            </ol>
+          </div>
         </div>
+      </div>
       {{/each}}
     </div>
-    <hr class="separacion">
-    <div class="centrar seccionesCurso">
-        <div id="accordion">
-  {{#each secciones}}
-  <div class="card">
-    <div class="card-header" id="headingOne">
-      <h5 class="mb-0">
-        <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{cveSeccion}}" aria-expanded="true" aria-controls="collapseOne">
-        {{nombre}}
-        </button>
-      </h5>
-    </div>
-    <div id="collapse{{cveSeccion}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-      <div class="card-body">
-        {{#each ../temas}}
-          {{#ifeq ../cveSeccion secTem}}
-          <div class="row justify-content-center">
-            <div class="col-md-4">
-              <li class="list-group-item">{{nam}}</li>
-            </div>
-          </div>
-          {{/ifeq}}
-        {{/each}}
-      </div>
-    </div>
   </div>
-  {{/each}}
-</div>
-    </div>
+
+  {{else}}
+  <br><br>
+  <div class="alert alert-warning" role="alert">
+    Únete al curso para acceder al contenido.
+  </div>
+  <br><br>
+
+  {{/if}}
+  </div>
 </main>
+
+<br>
+<br>
+
 
 {{> footer }}
 {{> scripts}}
 
 {{#if asignar}}
-  <script>
-    Swal.fire({
-      title: "Asignado con éxito!!",
-      icon:"success",
-      type: "success",
-      showConfirmButton: true
-    }).then(function() {
-      window.location = "/inicio/aprendiendo";
-    });
-  </script>
+<script>
+  Swal.fire({
+    title: "Asignado con éxito!!",
+    icon: "success",
+    type: "success",
+    showConfirmButton: true
+  }).then(function () {
+    window.location = "/inicio/aprendiendo";
+  });
+</script>
 {{/if}}

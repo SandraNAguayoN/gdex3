@@ -4,7 +4,7 @@ const { promisify } = require('util')
 
 function inicio(req, res) {
     req.getConnection((err, conn) => {
-        conn.query('SELECT c.cveCurso, c.nombre, c.descripcion, c.estatus, date_format(c.fechaRegistro, "%d-%m-%Y") AS fecha, c.rutaImagen, concat_ws(" ", u.nombre, u.apellidos) AS nombreCompleto FROM tblcurso c JOIN tblusuario u ON u.cveUsuario = c.cveUsuario', (err, cursosdata) => {
+        conn.query('SELECT DISTINCT c.cveCurso, c.nombre, c.descripcion, c.estatus, date_format(c.fechaRegistro, "%d-%m-%Y") AS fecha, c.rutaImagen, concat_ws(" ", u.nombre, u.apellidos) AS nombreCompleto FROM tblcurso c JOIN tblusuario u ON u.cveUsuario = c.cveUsuario JOIN tblseccion s ON s.cveCurso = c.cveCurso JOIN tbltema t ON t.cveSeccion = s.cveSeccion', (err, cursosdata) => {
             console.log('Este es el rol ' + req.token.user.cveRol);
             if (err) {
                 res.render(err)
@@ -34,7 +34,7 @@ async function verifytoken(req, res, next) {
 
 function misCursos(req, res) {
     req.getConnection((err, conn) => {
-        conn.query('SELECT c.cveCurso, c.nombre, c.descripcion, c.estatus, date_format(c.fechaRegistro, "%d-%m-%Y") AS fecha, c.rutaImagen FROM tblcurso c JOIN tblusuario u ON u.cveUsuario = c.cveUsuario WHERE u.cveUsuario = ?', [req.token.user.cveUsuario], (err, miscursosdata) => {
+        conn.query('SELECT DISTINCT c.cveCurso, c.nombre, c.descripcion, c.estatus, date_format(c.fechaRegistro, "%d-%m-%Y") AS fecha, c.rutaImagen FROM tblcurso c JOIN tblusuario u ON u.cveUsuario = c.cveUsuario WHERE u.cveUsuario = ?', [req.token.user.cveUsuario], (err, miscursosdata) => {
             if (err) {
                 res.render(err)
             } else {
@@ -52,7 +52,7 @@ function misCursos(req, res) {
 
 function aprendiendo(req, res) {
     req.getConnection((err, conn) => {
-        conn.query('SELECT ec.ultimoTema , c.cveCurso ,c.nombre, ec.avanceCurso, c.descripcion, c.estatus, date_format(c.fechaRegistro, "%d-%m-%Y") AS fecha, c.rutaImagen, concat_ws(" ", u.nombre, u.apellidos) AS nombreCompleto FROM tblcurso c JOIN tblestudiantecurso ec ON ec.cveCurso = c.cveCurso JOIN tblusuario u ON u.cveUsuario = ec.cveUsuario WHERE (ec.avanceCurso BETWEEN 0 AND 99) and u.cveUsuario = ?', [req.token.user.cveUsuario], (err, aprendiendodata) => {
+        conn.query('SELECT DISTINCT ec.ultimoTema , c.cveCurso ,c.nombre, ec.avanceCurso, c.descripcion, c.estatus, date_format(c.fechaRegistro, "%d-%m-%Y") AS fecha, c.rutaImagen, concat_ws(" ", u.nombre, u.apellidos) AS nombreCompleto FROM tblcurso c JOIN tblestudiantecurso ec ON ec.cveCurso = c.cveCurso JOIN tblusuario u ON u.cveUsuario = ec.cveUsuario WHERE (ec.avanceCurso BETWEEN 0 AND 99) and u.cveUsuario = ?', [req.token.user.cveUsuario], (err, aprendiendodata) => {
             conn.query('SELECT c.cveCurso, c.nombre, ec.avanceCurso, c.descripcion, c.estatus, date_format(c.fechaRegistro, "%d-%m-%Y") AS fecha, c.rutaImagen, concat_ws(" ", u.nombre, u.apellidos) AS nombreCompleto FROM tblcurso c JOIN tblestudiantecurso ec ON ec.cveCurso = c.cveCurso JOIN tblusuario u ON u.cveUsuario = ec.cveUsuario WHERE ec.avanceCurso = 100 and u.cveUsuario = ?', [req.token.user.cveUsuario], (err, terminadosdata) => {
                 if (err) {
                     res.render(err)
@@ -69,18 +69,20 @@ function aprendiendo(req, res) {
     });
 }
 
-function verCurs(req, res) {
-    var cveCurso = req.params.cveCurso;
-    cveCurso = 21;
+/*
+function verCurso(req, res) {
+    var cveCurso = req.params.id;
+
     req.getConnection((err, conn) => {
-        conn.query(`SELECT cveCurso, c.nombre, c.descripcion, c.estatus, date_format(c.fechaRegistro, "%d-%m-%Y") AS fecha, c.rutaImagen,  CONCAT(tu.nombre, ' ', tu.apellidos) as instructor from tblCurso c inner join tblUsuario tu on c.cveUsuario = tu.cveUsuario where cveCurso =  ${cveCurso}`, (error, cursodata) => {
+        conn.query(`SELECT cveCurso, c.nombre as nombreCurso, c.descripcion, c.estatus, date_format(c.fechaRegistro, "%d-%m-%Y") AS fecha, c.rutaImagen,  CONCAT(tu.nombre, ' ', tu.apellidos) as instructor from tblCurso c inner join tblUsuario tu on c.cveUsuario = tu.cveUsuario where cveCurso =  ?`,[cveCurso], (error, cursodata) => {
             if (!error) {
-                console.log(cursodata)
-                conn.query(`select nombre, cveSeccion from tblseccion WHERE cveCurso = ${cveCurso}`, (error1, secciondata) => {
+                console.log("Este es el curso"+cursodata)
+                
+                conn.query(`select nombre, cveSeccion from tblseccion WHERE cveCurso = ?`,[cveCurso], (error1, secciondata) => {
                     if (!error1) {
                         conn.query(`SELECT tt.cveTema, tt.nombre, ts.cveSeccion FROM tblTema tt inner join tblseccion ts on tt.cveSeccion = ts.cveSeccion WHERE cveCurso = ${cveCurso}`, (error2, temadata) => {
                             if (!error2) {
-                                res.render("inicio/vercurso", { curso: cursodata, secciones: secciondata, temas: temadata, sesion: req.token.user, cveCurso: cveCurso })
+                                res.render("inicio/verCurso", { curso: cursodata, secciones: secciondata, temas: temadata, sesion: req.token.user, cveCurso: cveCurso })
                             }
                         })
 
@@ -96,21 +98,28 @@ function verCurs(req, res) {
         });
 
     });
-}
+}*/
 function verCurso(req, res) {
     idCurso = req.params.id;
 
     req.getConnection((err, conn) => {
-        conn.query(`SELECT cur.cveCurso, cur.nombre as curnom, concat(day(cur.fechaRegistro),' ',mes(cur.fechaRegistro, 'es_ES'),' ', year(cur.fechaRegistro)) as fecha , cur.rutaImagen as ruta, cur.descripcion, CONCAT(usu.nombre, ' ', usu.apellidos) as instructor  FROM tblcurso as cur inner join tblusuario  as usu on usu.cveUsuario = cur.cveUsuario WHERE cur.cveCurso = ?`, [idCurso], (err, curso) => {
+        conn.query(`SELECT cur.cveCurso, cur.nombre as nombreCurso, date_format(cur.fechaRegistro, "%d-%m-%Y") as fecha , cur.rutaImagen as ruta, cur.descripcion, CONCAT(usu.nombre, ' ', usu.apellidos) as instructor  FROM tblcurso as cur inner join tblusuario  as usu on usu.cveUsuario = cur.cveUsuario WHERE cur.cveCurso = ?`, [idCurso], (err, curso) => {
             conn.query('SELECT cveSeccion, nombre from tblseccion WHERE cveCurso = ?', [idCurso], (err, secciones) => {
                 conn.query(`select tem.cveTema, tem.cveSeccion as secTem, tem.nombre as nam from tblseccion as sec  LEFT JOIN tbltema as tem on tem.cveSeccion = sec.cveSeccion  WHERE  sec.cveCurso = ?`, [idCurso], (err, temas) => {
                     conn.query(`SELECT avanceCurso FROM tblestudiantecurso WHERE cveCurso = ${idCurso} and cveUsuario = ${req.token.user.cveUsuario}`, (err, existe) => {
 
                         console.log("Existe" + existe)
-                        if (existe != null && existe != undefined && existe != "") {
-                            res.render("inicio/verCurso", { sesion: req.token.user, secciones: secciones, temas: temas, curso: curso, cveCurso: idCurso, idUsuario: req.token.user.cveUsuario, boton: false });
+
+                        if(req.token.user.cveRol == 2){
+                            alumno = true
                         } else {
-                            res.render("inicio/verCurso", { sesion: req.token.user, secciones: secciones, temas: temas, curso: curso, cveCurso: idCurso, idUsuario: req.token.user.cveUsuario, boton: true });
+                            alumno = false
+                        }
+
+                        if (existe != null && existe != undefined && existe != "") { //si esta en el curso
+                            res.render("inicio/verCurso", { sesion: req.token.user, secciones: secciones, temas: temas, curso: curso, cveCurso: idCurso, idUsuario: req.token.user.cveUsuario, alumno: alumno, boton: false });
+                        } else {
+                            res.render("inicio/verCurso", { sesion: req.token.user, secciones: secciones, temas: temas, curso: curso, cveCurso: idCurso, idUsuario: req.token.user.cveUsuario, alumno: alumno, boton: true });
                         }
                     })
                 });
@@ -141,8 +150,8 @@ function seguirCurso(req, res) {
 
                         });
                         conn.query(`SELECT tem.cveTema FROM tbltema as tem inner join tblseccion as sec on sec.cveSeccion = tem.cveSeccion inner join tblcurso as c on c.cveCurso= sec.cveCurso where c.cveCurso = ${idCurso} ORDER BY tem.cveTema ASC LIMIT 1`, (err, primertema) => {
-
-                            cveTema = primertema[0].cveTema
+                            
+                            cveTema = primertema[0].cveTema;
 
                             conn.query(`UPDATE tblestudiantecurso SET ultimoTema = ${cveTema} WHERE cveUsuario = ${req.token.user.cveUsuario} and cveCurso = ?`, [idCurso], (err, usuariodata) => {
 
@@ -159,7 +168,7 @@ function seguirCurso(req, res) {
                                     res.render("inicio/seguirCurso", { sesion: req.token.user, dataCurso: secciones, tema: temas, cursoid: idCurso, felicidades: { nombre: 'Felicidades has terminado este curso' }, bandera: { bandera: 'fin' } });
 
                                 } else {
-                                    conn.query(`select cvetema, nombre, descripcion, teoria from tbltema WHERE cveTema =  ?   `, [idTema], (err, temaActualdatos) => {
+                                    conn.query(`select t.cvetema, t.nombre as nombreTema, UPPER(t.nombre) as nombreMayus, s.nombre as nombreSeccion, c.nombre as nombreCurso, t.descripcion, t.teoria from tbltema t JOIN tblseccion s ON s.cveSeccion = t.cveSeccion JOIN tblcurso c ON c.cveCurso = s.cveCurso WHERE cveTema = ? `, [idTema], (err, temaActualdatos) => {
 
                                         conn.query(`SELECT rutaMaterial, nombreMaterial FROM tblmaterial where cveTema = ? `, [idTema], (err, listaMaterial) => {
 
