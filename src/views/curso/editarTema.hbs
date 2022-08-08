@@ -25,7 +25,25 @@
                     </div>
                 </div>
             </form>
-
+        </div>
+        <div>
+            <form action="/curso/agregarDescripcion" method="post">
+                <div class="centrar">
+                    <h3>Descripción:</h3>
+                    <div>
+                        {{#each temas}}
+                        <textarea class="areaTeoria contenedor-secciones centro justificado" name="descripcion" id=""
+                            cols="30" rows="10">{{descripcion}}</textarea>
+                        <input type="text" name="cveTema" value="{{cveTema}}" hidden>
+                        {{/each}}
+                    </div>
+                </div>
+                <div class="flex">
+                    <button type="submit" class="btn btn-success">
+                        Guardar
+                    </button>
+                </div>
+            </form>
         </div>
         <div>
             <div class="centrar">

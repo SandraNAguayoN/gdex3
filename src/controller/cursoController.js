@@ -541,6 +541,37 @@ function agregarTeoria(req, res){
     });
 }
 
+function agregarDescripcion(req, res){
+    var cveTema = req.body.cveTema;
+    var Descripcion = req.body.descripcion;
+
+    req.getConnection((err, conn) => {
+        conn.query(`UPDATE tblTema SET descripcion = '${Descripcion}' WHERE cveTema = ${cveTema}`, (err, rows) => {
+            if(err){
+                res.render(err)
+            }else{
+                req.getConnection((err, conn) => {
+                    conn.query(`SELECT cveMaterial, rutaMaterial, cveTema, nombreMaterial FROM tblMaterial WHERE cveTema = ${cveTema}`, (err, materialData) => {
+                        if(err){
+                            res.render(err)
+                        }else{
+                            req.getConnection((err, conn) => {
+                                conn.query(`SELECT tt.cveTema, tt.nombre, tt.descripcion, tt.teoria, tt.rutaImagen, tc.cveCurso, ts.cveSeccion, tt.descripcion FROM tblTema tt INNER JOIN tblSeccion ts ON tt.cveSeccion = ts.cveSeccion INNER JOIN tblCurso tc ON ts.cveCurso = tc.cveCurso WHERE cveTema =  ${cveTema}`, (err, temaData) => {
+                                    if(err){
+                                        res.render(err)
+                                    }else{
+                                        res.render("curso/editarTema", {material:materialData, temas:temaData,cveTema:cveTema, sesion: req.token.user})
+                                    }
+                                });
+                            });
+                        }
+                    });
+                });
+            }
+        });
+    });
+}
+
 module.exports = {
     crearCurso,
     editarTema,
@@ -559,5 +590,6 @@ module.exports = {
     eliminarMaterial,
     borrarMaterial,
     agregarTeoria,
+    agregarDescripcion,
     verifytoken
 }
