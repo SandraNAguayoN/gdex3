@@ -20,13 +20,13 @@ const app = express();
 //Configuración 
 app.use(cookieParser());
 
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 3008;
 app.set('port', port);
 
 //Asignación de puerto
 app.listen(app.get('port'), () => {
     //console.log("Corriendo en puerto" + app.get('port'));
-    console.log("Corriendo en puerto"+app.get('port'));
+    console.log("Corriendo en puerto: "+app.get('port'));
 });
 
 app.use(flash());

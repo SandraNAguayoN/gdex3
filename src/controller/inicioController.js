@@ -166,7 +166,7 @@ function seguirCurso(req, res) {
                         conn.query('SELECT cveSeccion, nombre from tblseccion WHERE cveCurso = ?', [idCurso], (err, secciones) => {
                             conn.query(`select tem.cveSeccion as secid, cur.cveCurso, tem.nombre as name, tem.cveTema as cveTem,  avete.estado as estate from tblusuario as us LEFT join tblestudiantecurso as estcur on estcur.cveUsuario = us.cveUsuario left join tblcurso as cur on cur.cveCurso = estcur.cveCurso left JOIN tblseccion as sec on sec.cveCurso= cur.cveCurso LEFT JOIN tbltema as tem on tem.cveSeccion = sec.cveSeccion LEFT JOIN tblavancetemas as avete on avete.cveTema = tem.cveTema and avete.cveUsuario= us.cveUsuario WHERE us.cveUsuario=  ${req.token.user.cveUsuario}   and cur.cveCurso = ?`, [idCurso], (err, temas) => {
                                 if (idTema == 'term') {
-                                    console.log(temas)
+                                    
                                     res.render("inicio/seguirCurso", { sesion: req.token.user, dataCurso: secciones, tema: temas, cursoid: idCurso, felicidades: { nombre: 'Felicidades has terminado este curso' }, bandera: { bandera: 'fin' } });
 
                                 } else {
@@ -203,7 +203,7 @@ function listarUsuarios(req, res) {
                 res.render(err)
             } else {
                 if (req.token.user.cveRol != 3) { //Si no es admin
-                    console.log('el rol del usuario es ' + req.token.user.cveRol);
+                    
                     res.render("error/error401");
                 } else {
                     res.render("inicio/usuarios", { sesion: req.token.user, usuarios: usuariosdata, flash: req.flash('message') });
@@ -218,12 +218,12 @@ function listarUsuarios(req, res) {
 
 function mostrarUsuario(req, res) {
     const cveUsuario = req.params.id;
-    console.log(cveUsuario);
+    
     req.getConnection((err, conn) => {
         conn.query('SELECT cveUsuario, nombre, apellidos, matricula, email, cveRol FROM tblusuario WHERE cveUsuario = ?', [cveUsuario], (err, usuariodata) => {
             if (usuariodata.length > 0) {
                 res.render('inicio/editarUsuario', { usuario: usuariodata, sesion: req.token.user });
-                console.log(JSON.parse(JSON.stringify(usuariodata)));
+                
             } else {
                 res.render('inicio/editarUsuario', { error: 'Error: No se pudieron obtener los datos de usuario.', sesion: req.token.user });
             }
@@ -298,7 +298,7 @@ function updateTemaAvance(req, res) {
                             }
 
                         });
-                        console.log("Si")
+                        
                         const temasjson = JSON.parse(JSON.stringify(temas))
                         porcentajeCurso = (100 / temasjson.length) * terminados1
                         porcentajeCurso = porcentajeCurso.toFixed(2)
@@ -351,7 +351,7 @@ function insertarComentario(req, res) {
     idtema = req.params.idTema
     idUsuario = req.params.idusuario
     comentario = req.params.comentario
-    console.log(idtema)
+    
     req.getConnection((err, conn) => {
         conn.query(`INSERT INTO tblcomentario ( comentario, fechaRegistro, cveUsuario, cveTema ) VALUES ("${comentario}", NOW(), ${idUsuario}, ${idtema})`, (err, respuestas) => {
             if (err) {
@@ -371,7 +371,7 @@ function insertarComentarioRespuesta(req, res) {
     req.getConnection((err, conn) => {
         conn.query(`INSERT INTO tblcomentariorespuestas ( respuesta, fechaRespuesta, cveUsuario, cveComentario ) VALUES ("${comentario}", NOW(), ${idUsuario}, ${idcomentario})`, (err, respuestas) => {
             if (err) {
-                console.log(err)
+                
                 res.status(500).send('Error en la carga de datos');
             }
             res.status(200).send('Se inserto el comentario');
