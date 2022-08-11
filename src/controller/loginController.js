@@ -50,7 +50,7 @@ function auth(req, res) {
     else {
         req.getConnection((err, conn) => {
             conn.query('SELECT cveUsuario, nombre, apellidos, matricula, email, password, fechaRegistro, cveRol FROM tblusuario WHERE email = ?', [data.email], (err, userdata) => {
-                if (userdata.length > 0) {
+                if (userdata > 0) {
                     const element = JSON.parse(JSON.stringify(userdata))
 
                     bcrypt.compare(data.password, element[0].password, (err, isMatch) => {
