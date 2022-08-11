@@ -55,11 +55,11 @@ app.use(morgan('dev'))
 
 //base de datos
 app.use(myconnection(mysql, {
-    host: 'localhost',
-    user: 'root',
-    password: '',
+    host: 'sql5.freemysqlhosting.net',
+    user: 'sql5512337',
+    password: '6eJ83BK1S3',
     port: '3306',
-    database: 'gdex2'
+    database: 'sql5512337'
 }));
 //Uso de sesiones
 app.use(session({

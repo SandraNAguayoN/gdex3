@@ -56,14 +56,12 @@ function editarTema(req, res) {
                     conn.query(`SELECT cveMaterial, rutaMaterial, cveTema, nombreMaterial FROM tblMaterial WHERE cveTema = ${cveTema}`, (error, materialData) => {
                         if(!err){
                             res.render('curso/editarTema',{temas:temaData, material:materialData, sesion: req.token.user})
-                            console.log(materialData)
-                        }else{
-                            console.log(error);
+                            
                         }
                     });
                 });
             }else{
-                console.log(error);
+                
             }
         });
     });
@@ -486,17 +484,13 @@ function borrarMaterial(req, res){
             }else{
                 req.getConnection((err, conn) => {
                     conn.query(`DELETE FROM tblMaterial WHERE cveMaterial = ${id}`, (error, rows) => {
-                        if(!err){ 
-                        }else{
-                            console.log(error);
-                        }
+                        
                     });
                 });
                 temaData.forEach(element => {
                     req.getConnection((err, conn) => {
                         conn.query(`SELECT cveMaterial, rutaMaterial, cveTema, nombreMaterial FROM tblMaterial WHERE cveTema = ${element.cveTema}`, (err, materialData) => {
-                            console.log(element.cveTema)
-                            console.log(materialData)
+                        
                             if(err){
                                 res.render(err)
                             }else{
