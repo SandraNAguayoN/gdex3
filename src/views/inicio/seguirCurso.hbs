@@ -118,7 +118,8 @@
                 <h3 class="centrar" style="color: gray;">Teoría</h3>
                 {{#if teoria}}
                 <div align="center">
-                    <div style="width:1200px; padding:20px 20px 50px 50px; border: solid 1px gray; border-radius: 15px; background:whitesmoke">
+                    <div
+                        style="width:1200px; padding:20px 20px 50px 50px; border: solid 1px gray; border-radius: 15px; background:whitesmoke">
                         <p class="parrafo">{{teoria}}</p>
                     </div>
                 </div>
@@ -175,8 +176,9 @@
                 <span class="close">&times;</span>
                 <h4>Comentar</h4>
                 <div>
-                    <textarea class="modalComentario form-control" name="Comentario" type="text"
-                        placeholder="Deja tu comentario"></textarea>
+
+                    <input class="modalComentario form-control" name="Comentario" type="text"
+                        placeholder="Deja tu comentario">
                 </div>
 
                 <div class="btnsModal">
@@ -207,7 +209,7 @@
 
                     $.ajax({
                         type: 'GET',
-                        url: 'http://localhost:3000/inicio/cargarComentarios/' + idCurso + '/' + idtema
+                        url: '/inicio/cargarComentarios/' + idCurso + '/' + idtema
 
                     }).done(function (dataComentarios) {
 
@@ -218,14 +220,19 @@
 
                             $.ajax({
                                 type: 'GET',
-                                url: 'http://localhost:3000/inicio/cargarComentariosRespuestas/' + idCurso + '/' + idtema
+                                url: '/inicio/cargarComentariosRespuestas/' + idCurso + '/' + idtema
 
                             }).done(function (dataRespuestas) {
+                                console.log(dataRespuestas)
+                                if (dataRespuestas.length == 0) {
 
-                                dataComentarios.forEach(element => {
+                                } else {
 
 
-                                    div.innerHTML += (`<div class="container-comments">
+                                    dataComentarios.forEach(element => {
+
+
+                                        div.innerHTML += (`<div class="container-comments">
                                                     <div class="comments">
                                                     <div class="info-comments">
 
@@ -238,9 +245,9 @@
                                 <p>` + element.comentario + `</p><div class="respuestaArea">
                                     <input type="text" class="inputRespuesta" id="respuesta`+ element.cveComentario + `" placeholder="Responder">
                                     <input type="button" class="buttonest" onclick="comentrespuesta(`+ element.cveComentario + `)" value="Responder"></div></div></div></div>`);
-                                    dataRespuestas.forEach(elementRes => {
-                                        if (element.cveComentario == elementRes.cveComentario) {
-                                            div.innerHTML += `<div class="container-comments-request">
+                                        dataRespuestas.forEach(elementRes => {
+                                            if (element.cveComentario == elementRes.cveComentario) {
+                                                div.innerHTML += `<div class="container-comments-request">
 
                         <div class="comments-request">
 
@@ -263,14 +270,15 @@
 
 
                     </div>`
-                                        }
-
+                                            }
+                                        
 
                                     })
                                 })
-                            });
-                        }
-                    });
+}
+                        });
+                }
+            });
                 }
             };
             window.onload = cargarComen();
@@ -287,7 +295,7 @@
 
                 $.ajax({
                     type: 'GET',
-                    url: 'http://localhost:3000/inicio/updateTemaAvance/' + estado + '/' + id + '/' + idCurso
+                    url: '/inicio/updateTemaAvance/' + estado + '/' + id + '/' + idCurso
 
 
                 }).done(function (data) {
@@ -310,7 +318,7 @@
 
                     $.ajax({
                         type: 'GET',
-                        url: 'http://localhost:3000/inicio/insertarComentario/' + idtema + '/' + idusuario + '/' + comentario
+                        url: '/inicio/insertarComentario/' + idtema + '/' + idusuario + '/' + comentario
 
                     }).done(function (data) {
                         div.innerHTML = ""
@@ -322,6 +330,7 @@
                 id = "respuesta" + cveComentario
                 var comentario = $('input[id="' + id + '"]').val();
                 var idusuario = $('p[name="cveusuario"]').attr('id');
+                console.log(comentario)
                 if (comentario.length == 0) {
                     alert('ingrese un comentario');
                     return false;
@@ -329,7 +338,7 @@
 
                     $.ajax({
                         type: 'GET',
-                        url: 'http://localhost:3000/inicio/insertarComentarioRespuesta/' + cveComentario + '/' + idusuario + '/' + comentario
+                        url: '/inicio/insertarComentarioRespuesta/' + cveComentario + '/' + idusuario + '/' + comentario
 
                     }).done(function (data) {
                         div.innerHTML = ""

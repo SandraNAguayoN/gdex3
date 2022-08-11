@@ -145,14 +145,16 @@ function seguirCurso(req, res) {
                         existNullavanve.forEach(element => {
 
                             conn.query(`INSERT INTO tblavancetemas (cveTema, cveUsuario, estado) values ('${element.cveTema}', '${req.token.user.cveUsuario}', 0)`, (err2, rows) => {
-                                console.log(err2)
+                                
                             });
 
                         });
-                        conn.query(`SELECT tem.cveTema FROM tbltema as tem inner join tblseccion as sec on sec.cveSeccion = tem.cveSeccion inner join tblcurso as c on c.cveCurso= sec.cveCurso where c.cveCurso = ${idCurso} ORDER BY tem.cveTema ASC LIMIT 1`, (err, primertema) => {
-                            
+                        conn.query(`SELECT tem.cveTema as cveTema FROM tbltema as tem inner join tblseccion as sec on sec.cveSeccion = tem.cveSeccion inner join tblcurso as c on c.cveCurso= sec.cveCurso where c.cveCurso = ${idCurso} ORDER BY tem.cveTema ASC LIMIT 1`, (err, primertema) => {
+                            if(err){
+                                console.log(err)
+                            }
                             cveTema = primertema[0].cveTema;
-
+                            
                             conn.query(`UPDATE tblestudiantecurso SET ultimoTema = ${cveTema} WHERE cveUsuario = ${req.token.user.cveUsuario} and cveCurso = ?`, [idCurso], (err, usuariodata) => {
 
                                 res.redirect(`/inicio/seguirCurso/${idCurso}/${cveTema}`);
@@ -327,7 +329,8 @@ function cargarComentarios(req, res) {
     idtema = req.params.idTema
     idCurso = req.params.idCurso
     req.getConnection((err, conn) => {
-        conn.query(`SELECT com.cveComentario, com.comentario, concat(day(com.fechaRegistro),' ',mes(com.fechaRegistro, 'es_ES'),' ', year(com.fechaRegistro)) as fecha  , usu.nombre FROM tblcomentario as com INNER JOIN tbltema as tema on tema.cveTema = com.cveTema INNER JOIN tblseccion as sec on sec.cveSeccion = tema.cveSeccion INNER JOIN tblusuario as usu on usu.cveUsuario = com.cveUsuario where sec.cveCurso = ${idCurso} and tema.cveTema = ?`, [idtema], (err, comentarios) => {
+        conn.query(`SELECT com.cveComentario, com.comentario, DATE_FORMAT(com.fechaRegistro,'%d-%m-%y') as fecha  , usu.nombre FROM tblcomentario as com INNER JOIN tbltema as tema on tema.cveTema = com.cveTema INNER JOIN tblseccion as sec on sec.cveSeccion = tema.cveSeccion INNER JOIN tblusuario as usu on usu.cveUsuario = com.cveUsuario where sec.cveCurso = ${idCurso} and tema.cveTema = ?`, [idtema], (err, comentarios) => {
+            
             res.send(comentarios)
         });
     });
@@ -338,7 +341,7 @@ function cargarComentariosRespuestas(req, res) {
     idtema = req.params.idTema
     idCurso = req.params.idCurso
     req.getConnection((err, conn) => {
-        conn.query(`SELECT comres.cveComentario, comres.respuesta, concat(day(comres.fechaRespuesta),' ',mes(comres.fechaRespuesta, 'es_ES'),' ', year(comres.fechaRespuesta)) as fecha, usu.nombre  FROM tblcomentariorespuestas as comres inner join tblcomentario as com on com.cveComentario = comres.cveComentario INNER join tbltema as tema on tema.cveTema = com.cveTema INNER join tblseccion as sec on sec.cveSeccion = tema.cveSeccion INNER join tblusuario as usu on usu.cveUsuario = comres.cveUsuario where sec.cveCurso = ${idCurso} and tema.cveTema=?`, [idtema], (err, respuestas) => {
+        conn.query(`SELECT comres.cveComentario, comres.respuesta, DATE_FORMAT(comres.fechaRespuesta,'%d-%m-%y') as fecha, usu.nombre  FROM tblcomentariorespuestas as comres inner join tblcomentario as com on com.cveComentario = comres.cveComentario INNER join tbltema as tema on tema.cveTema = com.cveTema INNER join tblseccion as sec on sec.cveSeccion = tema.cveSeccion INNER join tblusuario as usu on usu.cveUsuario = comres.cveUsuario where sec.cveCurso = ${idCurso} and tema.cveTema=?`, [idtema], (err, respuestas) => {
             res.send(respuestas)
         });
     });
