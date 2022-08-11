@@ -31,5 +31,6 @@ router.post('/agregarMaterial', cursoController.verifytoken, upload.single('arch
 router.post('/eliminarMaterial', cursoController.verifytoken, cursoController.eliminarMaterial);
 router.get('/borrarMaterial/:id', cursoController.verifytoken, cursoController.borrarMaterial);
 router.post('/agregarTeoria', cursoController.verifytoken, cursoController.agregarTeoria);
+router.post('/agregarDescripcion', cursoController.verifytoken, cursoController.agregarDescripcion);
 module.exports = router;
 

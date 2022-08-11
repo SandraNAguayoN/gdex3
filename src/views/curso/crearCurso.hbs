@@ -19,18 +19,18 @@
             <div class="formCrearCurso card-body text-primary">
                 <div class="form-group">
                     <label for="name">Nombre curso</label>
-                    <input class="form-control black" type="text" id="nameCurso" name="nameCurso" required>
+                    <input class="form-control black" type="text" id="nameCurso" name="nameCurso" required minlength="3" maxlength="250">
                 </div>
                 <div class="form-group">
                     <label for="image">Imagen curso</label>
                     <input class="form-control black" type="file"
                         accept="image/png,image/jpeg,image/gif,image/ico,image/icoa,image/jpg" id="imagen"
-                        name="imagen">
+                        name="imagen" maxlength="250">
                 </div>
                 <div class="form-group">
                     <label for="descripcion">Descripción</label>
                     <textarea class="form-control black-2" id="descripcion" name="descripcion" cols="20" rows="6"
-                        required></textarea>
+                    minlength="3" maxlength="500" required></textarea>
                 </div>
             </div>
 
