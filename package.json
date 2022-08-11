@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "Sistema de cursos",
   "main": "index.js",
+  "engines":{
+    "node":"16.13.2"
+  },
   "scripts": {
-    "server": "nodemon src/index.js"
+    "server": "nodemon src/index.js",
+    "start": "node src/index.js"
   },
   "keywords": [],
   "author": "",
