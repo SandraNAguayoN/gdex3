@@ -18,13 +18,16 @@ const cookieParser = require('cookie-parser');
 const app = express();
 
 //Configuración 
-//app.set('port', 3000);
+
 app.use(cookieParser())
 
+var port = process.env.PORT || 3000;
+app.set('port', port);
+
 //Asignación de puerto
-app.listen(process.env.PORT || 3000, () => {
+app.listen(app.get('port'), () => {
     //console.log("Corriendo en puerto" + app.get('port'));
-    console.log("Corriendo en puerto");
+    console.log("Corriendo en puerto"+app.get('port'));
 });
 
 app.use(flash());
