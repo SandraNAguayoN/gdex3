@@ -11,7 +11,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <input type="text" class="form-control" name="nombre"
-                                    placeholder="Nuevo nombre de tema">
+                                    placeholder="Nuevo nombre de tema" required minlength="3" maxlength="250">
                             </div>
                             {{#each temas}}
                             <div class="form-group">
@@ -34,7 +34,7 @@
                         {{#each temas}}
                         <textarea class="areaTeoria contenedor-secciones centro justificado" name="descripcion" id=""
                             cols="30" rows="10">{{descripcion}}</textarea>
-                        <input type="text" name="cveTema" value="{{cveTema}}" hidden>
+                        <input type="text" name="cveTema" value="{{cveTema}}" hidden minlength="3" maxlength="500">
                         {{/each}}
                     </div>
                 </div>
@@ -95,10 +95,10 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <input type="text" class="form-control black" name="nombre" id=""
-                                    placeholder="Nombre del material" required>
+                                    placeholder="Nombre del material" required minlength="3" maxlength="100">
                             </div>
                             <div class="col-md-4">
-                                <input type="file" class="form-control black" name="archivo" id="" required>
+                                <input type="file" class="form-control black" name="archivo" id="" required minlength="3" maxlength="500">
                                 {{#each temas}}
                                 <input type="text" class="form-control" name="cveTema" id="" value="{{cveTema}}" hidden>
                             </div>
@@ -117,7 +117,7 @@
                     <div>
                         {{#each temas}}
                         <textarea class="areaTeoria contenedor-secciones centro justificado" name="teoria" id=""
-                            cols="30" rows="10">{{teoria}}</textarea>
+                            cols="30" rows="10" minlength="3" maxlength="5000">{{teoria}}</textarea>
                         <input type="text" name="cveTema" value="{{cveTema}}" hidden>
                         {{/each}}
                     </div>

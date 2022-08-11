@@ -4,7 +4,8 @@ const sharp = require('sharp');
 const app= express();
 const Swal = require('sweetalert2')
 const jwt = require("jsonwebtoken");
-const { promisify } = require('util')
+const { promisify } = require('util');
+const { check, validationResult } = require('express-validator');
 var cveCurso = "";
 
 app.use(cors());
@@ -67,6 +68,7 @@ function editarTema(req, res) {
         });
     });
 }
+
 
 function upload(req, res) {
     var nombreImagen = "";
