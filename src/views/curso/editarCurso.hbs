@@ -52,7 +52,7 @@
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="form-group">
-                                    <input class="form-control black" type="text" id="nameCurso" name="nombreSeccion" required>
+                                    <input class="form-control black" type="text" id="nameCurso" name="nombreSeccion" required maxlength="250" minlength="3">
                                 </div>
                                 <div class="form-group">
                                     {{#each miscursos}}
@@ -112,7 +112,7 @@
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="form-group">
-                                    <input class="form-control black" type="text" id="nameTema" name="nombreTema" required>
+                                    <input class="form-control black" type="text" id="nameTema" name="nombreTema" required maxlength="250" minlength="3">
                                 </div>
                                 <div class="form-group">
                                     <input class="form-control black" type="text" id="cveSeccion" name="cveSeccion" value="{{cveSeccion}}" hidden>
@@ -141,7 +141,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
@@ -152,7 +152,7 @@
                         <div class="formCrearCurso">
                             <div class="form-group">
                                 <label for="name">Nombre curso:</label>
-                                <input class="form-control black" type="text" id="nameCurso" name="nameCurso" value="{{nombre}}" required>
+                                <input class="form-control black" type="text" id="nameCurso" name="nameCurso" value="{{nombre}}" required minlength="3" maxlength="250">
                             </div>
                             <div class="form-group">
                                 {{#if rutaImagen}}
@@ -164,11 +164,11 @@
                                 {{else}}
                                 <label for="image">Imagen:</label>
                                 {{/if}}
-                                <input class="form-control black" type="file" accept="image/png,image/jpeg,image/gif,image/ico,image/icoa,image/jpg" id="imagen" name="imagen" >
+                                <input class="form-control black" type="file" accept="image/png,image/jpeg,image/gif,image/ico,image/icoa,image/jpg" id="imagen" name="imagen" minlength="3" maxlength="250">
                             </div>
                             <div class="form-group">
                                 <label for="descripcion">Descripción:</label>
-                                <textarea align="right" class="form-control black-2 desc" id="descripcion" name="descripcion" cols="30" rows="10" placeholder="{{nombre}}">{{descripcion}}</textarea>
+                                <textarea align="right" class="form-control black-2 desc" id="descripcion" name="descripcion" cols="30" rows="10" placeholder="{{nombre}}" required maxlength="500" minlength="3" >{{descripcion}}</textarea>
                             </div>
                             <input type="text" value="{{cveCurso}}" name="cveCurso" hidden>
                         </div>

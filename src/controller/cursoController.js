@@ -4,7 +4,8 @@ const sharp = require('sharp');
 const app= express();
 const Swal = require('sweetalert2')
 const jwt = require("jsonwebtoken");
-const { promisify } = require('util')
+const { promisify } = require('util');
+const { check, validationResult } = require('express-validator');
 var cveCurso = "";
 
 app.use(cors());
@@ -55,18 +56,17 @@ function editarTema(req, res) {
                     conn.query(`SELECT cveMaterial, rutaMaterial, cveTema, nombreMaterial FROM tblMaterial WHERE cveTema = ${cveTema}`, (error, materialData) => {
                         if(!err){
                             res.render('curso/editarTema',{temas:temaData, material:materialData, sesion: req.token.user})
-                            console.log(materialData)
-                        }else{
-                            console.log(error);
+                            
                         }
                     });
                 });
             }else{
-                console.log(error);
+                
             }
         });
     });
 }
+
 
 function upload(req, res) {
     var nombreImagen = "";
@@ -79,9 +79,9 @@ function upload(req, res) {
         conn.query(`INSERT INTO tblcurso (nombre, descripcion, estatus, fechaRegistro, cantidadUsuarios, rutaImagen,cveUsuario) 
         values ('${req.body.nameCurso}', '${req.body.descripcion}', 1, CURDATE(), 0, '${nombreImagen}',${usuario} )`, (err2, rows) => {
             
-                console.log(usuario);
+                
                 res.render('curso/crearCurso',{alert:true, sesion: req.token.user});
-                console.log(usuario);
+                
 
         });
     });
@@ -484,17 +484,13 @@ function borrarMaterial(req, res){
             }else{
                 req.getConnection((err, conn) => {
                     conn.query(`DELETE FROM tblMaterial WHERE cveMaterial = ${id}`, (error, rows) => {
-                        if(!err){ 
-                        }else{
-                            console.log(error);
-                        }
+                        
                     });
                 });
                 temaData.forEach(element => {
                     req.getConnection((err, conn) => {
                         conn.query(`SELECT cveMaterial, rutaMaterial, cveTema, nombreMaterial FROM tblMaterial WHERE cveTema = ${element.cveTema}`, (err, materialData) => {
-                            console.log(element.cveTema)
-                            console.log(materialData)
+                        
                             if(err){
                                 res.render(err)
                             }else{
@@ -541,6 +537,37 @@ function agregarTeoria(req, res){
     });
 }
 
+function agregarDescripcion(req, res){
+    var cveTema = req.body.cveTema;
+    var Descripcion = req.body.descripcion;
+
+    req.getConnection((err, conn) => {
+        conn.query(`UPDATE tblTema SET descripcion = '${Descripcion}' WHERE cveTema = ${cveTema}`, (err, rows) => {
+            if(err){
+                res.render(err)
+            }else{
+                req.getConnection((err, conn) => {
+                    conn.query(`SELECT cveMaterial, rutaMaterial, cveTema, nombreMaterial FROM tblMaterial WHERE cveTema = ${cveTema}`, (err, materialData) => {
+                        if(err){
+                            res.render(err)
+                        }else{
+                            req.getConnection((err, conn) => {
+                                conn.query(`SELECT tt.cveTema, tt.nombre, tt.descripcion, tt.teoria, tt.rutaImagen, tc.cveCurso, ts.cveSeccion, tt.descripcion FROM tblTema tt INNER JOIN tblSeccion ts ON tt.cveSeccion = ts.cveSeccion INNER JOIN tblCurso tc ON ts.cveCurso = tc.cveCurso WHERE cveTema =  ${cveTema}`, (err, temaData) => {
+                                    if(err){
+                                        res.render(err)
+                                    }else{
+                                        res.render("curso/editarTema", {material:materialData, temas:temaData,cveTema:cveTema, sesion: req.token.user})
+                                    }
+                                });
+                            });
+                        }
+                    });
+                });
+            }
+        });
+    });
+}
+
 module.exports = {
     crearCurso,
     editarTema,
@@ -559,5 +586,6 @@ module.exports = {
     eliminarMaterial,
     borrarMaterial,
     agregarTeoria,
+    agregarDescripcion,
     verifytoken
 }

@@ -8,7 +8,7 @@ const { validationResult } = require('express-validator');
 function login(req, res) {
     if (req.cookies.jwt) {
 
-        const decodificada =  promisify(jwt.verify)(req.cookies.jwt, 'secretkey')
+        const decodificada = promisify(jwt.verify)(req.cookies.jwt, 'secretkey')
 
 
         req.token = decodificada;
@@ -23,7 +23,7 @@ function login(req, res) {
 function registrar(req, res) {
     if (req.cookies.jwt) {
 
-        const decodificada =  promisify(jwt.verify)(req.cookies.jwt, 'secretkey')
+        const decodificada = promisify(jwt.verify)(req.cookies.jwt, 'secretkey')
 
 
         req.token = decodificada;
@@ -40,7 +40,7 @@ function registrar(req, res) {
 function auth(req, res) {
     const data = req.body;
     const errors = validationResult(req);
-    console.log(errors);
+
 
     if (!errors.isEmpty()) {
         const validaciones = errors.array();
@@ -68,7 +68,7 @@ function auth(req, res) {
                             const token = jwt.sign({ user: element[0] }, 'secretkey', { expiresIn: '2h' })
 
                             const cookiesOptions = {
-                                expires: new Date(Date.now() + (3500000*2)),
+                                expires: new Date(Date.now() + (3500000 * 2)),
                                 httpOnly: true
                             }
                             res.cookie('jwt', token, cookiesOptions)
@@ -77,7 +77,12 @@ function auth(req, res) {
                         }
                     });
                 } else {
-                    res.render('auth/index', { validaciones: errors, valores: data, error: 'Error: Usuario no existe.' });
+                    if (!errors.isEmpty()) {
+                        res.render('auth/index', { validaciones: errors, valores: data, error: 'Error: Usuario no existe.' });
+                    }else{
+                        res.render('auth/index', {  valores: data, error: 'Error: Usuario no existe.' });
+                    
+                    }
                 }
             });
         });
@@ -97,7 +102,7 @@ function logout(req, res) {
 function regUser(req, res) {
     const data = req.body;
     const errors = validationResult(req);
-    console.log(errors)
+   
     if (!errors.isEmpty()) {
         const validaciones = errors.array();
         res.render('auth/registrar', { validaciones: validaciones, valores: data });
@@ -134,8 +139,8 @@ function regUser(req, res) {
                                         const token = jwt.sign({ user: element[0] }, 'secretkey', { expiresIn: '2h' })
 
                                         const cookiesOptions = {
-                                            expires: new Date(Date.now() + (3500000*2)),
-                                                                          
+                                            expires: new Date(Date.now() + (3500000 * 2)),
+
                                             httpOnly: true
                                         }
                                         res.cookie('jwt', token, cookiesOptions)
@@ -162,5 +167,5 @@ module.exports = {
     logout,
     regUser,
     auth,
-    
+
 }
