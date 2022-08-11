@@ -81,9 +81,9 @@ function upload(req, res) {
         conn.query(`INSERT INTO tblcurso (nombre, descripcion, estatus, fechaRegistro, cantidadUsuarios, rutaImagen,cveUsuario) 
         values ('${req.body.nameCurso}', '${req.body.descripcion}', 1, CURDATE(), 0, '${nombreImagen}',${usuario} )`, (err2, rows) => {
             
-                console.log(usuario);
+                
                 res.render('curso/crearCurso',{alert:true, sesion: req.token.user});
-                console.log(usuario);
+                
 
         });
     });

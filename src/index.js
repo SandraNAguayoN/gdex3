@@ -18,7 +18,7 @@ const cookieParser = require('cookie-parser');
 const app = express();
 
 //Configuración 
-app.set('port', 3000);
+app.set('port', 3008);
 app.use(cookieParser())
 
 //Asignación de puerto
